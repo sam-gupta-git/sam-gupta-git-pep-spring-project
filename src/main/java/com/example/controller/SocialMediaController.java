@@ -102,21 +102,23 @@ public class SocialMediaController {
         }
     }
 
-    // /**
-    //  * Handler for new account endpoint
-    //  * @param context The Javalin Context object manages information about both the HTTP request and response.
-    //  */
-    // private void postAccountHandler(Context ctx) throws JsonProcessingException {
-    //     ObjectMapper mapper = new ObjectMapper();
-    //     Account account = mapper.readValue(ctx.body(), Account.class);
-    //     // Check if username and password are valid
-    //     if (accountService.getAccountByUsername(account.getUsername()) == null && account.getUsername().length() != 0 && account.getPassword().length() >= 4){
-    //         Account addedAccount = accountService.registerAccount(account);
-    //         ctx.json(mapper.writeValueAsString(addedAccount));
-    //     } else {    
-    //         ctx.status(400);
-    //     }
-    // }
+    /**
+     * Handler for new account endpoint
+     */
+    @PostMapping("/register")
+    public ResponseEntity<Account> postAccountHandler (@RequestBody Account account) {
+        // Check if user exists
+        if (accountService.getAccountByUsername(account.getUsername()) != null){
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+        // Check if username and password are valid
+        if (account.getUsername().length() != 0 && account.getPassword().length() >= 4){
+            Account addedAccount = accountService.addAccount(account);
+            return ResponseEntity.status(HttpStatus.OK).body(addedAccount);
+        } else {    
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
 
     // /**
     //  * Handler for verifying a login given username and password, return 401: forbidden if invalid login
