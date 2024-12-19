@@ -57,14 +57,16 @@ public class MessageService {
     //  * @param message_id The ID of the message to be updated
     //  * @param message The message object that contains the updated message
     //  */ 
-    // public Message updateMessage(int message_id, Message message) {
-    //     if (messageRepository.getMessageById(message_id) != null){
-    //         messageRepository.updateMessage(message_id, message);
-    //         Message updatedMessage = messageRepository.getMessageById(message_id);
-    //         return updatedMessage;
-    //     }
-    //     return null;
-    // }
+    public int updateMessage(int messageId, Message message) {
+        Optional<Message> messageOptional = messageRepository.findById(messageId);
+        if(messageOptional.isPresent()){
+            Message updatedMessage = messageOptional.get();
+            updatedMessage.setMessageText(message.getMessageText());
+            messageRepository.save(updatedMessage);
+            return 1;
+        }
+        return 0;
+    }
 
     // /**
     //  * Method to delete a message given its ID

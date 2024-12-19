@@ -59,22 +59,21 @@ public class SocialMediaController {
         
     }
 
-    // /**
-    //  * Handler for updating message endpoint
-    //  * @param context The Javalin Context object manages information about both the HTTP request and response.
-    //  */
-    // private void updateMessageHandler(Context ctx) throws JsonProcessingException {
-    //     ObjectMapper mapper = new ObjectMapper();
-    //     Message message = mapper.readValue(ctx.body(), Message.class);
-    //     int message_id = Integer.parseInt(ctx.pathParam("message_id"));
-    //     // Verify that the updated message text is valid and the specified message exists
-    //     if (message.getMessage_text().length() > 0 && message.getMessage_text().length() < 255 && messageService.getMessageById(message_id) != null){
-    //         Message updatedMessage = messageService.updateMessage(message_id, message);
-    //         ctx.json(mapper.writeValueAsString(updatedMessage));
-    //     } else {    
-    //         ctx.status(400);
-    //     }
-    // }
+    /**
+     * Handler for updating message endpoint
+     * @param context The Javalin Context object manages information about both the HTTP request and response.
+     */
+    @PatchMapping("/messages/{messageId}")
+    public ResponseEntity<?> updateMessageHandler(@PathVariable Integer messageId, @RequestBody Message message){
+        // Verify that the updated message text is valid and the specified message exists
+        String messageText = message.getMessageText();
+        if (messageText.length() > 0 && messageText.length() < 255 && messageService.getMessageById(messageId) != null){
+            int updateResult = messageService.updateMessage(messageId, message);
+            return ResponseEntity.status(HttpStatus.OK).body(updateResult);
+        } else {    
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("");
+        }
+    }
 
     /**
      * Handler for retrieving all messages
