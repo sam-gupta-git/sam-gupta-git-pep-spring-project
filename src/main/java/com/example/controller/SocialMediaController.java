@@ -78,27 +78,19 @@ public class SocialMediaController {
 
     /**
      * Handler for retrieving all messages
-     * @param context The Javalin Context object manages information about both the HTTP request and response.
      */
     @GetMapping("/messages")
     public ResponseEntity<List<Message>> getAllMessagesHandler(){
         return ResponseEntity.status(HttpStatus.OK).body(messageService.getAllMessages());
     }
 
-    // /**
-    //  * Handler for retrieving a message given an ID
-    //  * @param context The Javalin Context object manages information about both the HTTP request and response.
-    //  */
-    // private void getMessageById(Context ctx) throws JsonProcessingException{
-    //     ObjectMapper mapper = new ObjectMapper();
-    //     int message_id = Integer.parseInt(ctx.pathParam("message_id"));
-    //     Message fetchedMessage = messageService.getMessageById(message_id);
-    //     System.out.println(fetchedMessage);
-    //     // Return message if found
-    //     if (fetchedMessage != null){
-    //         ctx.json(mapper.writeValueAsString(fetchedMessage));
-    //     }
-    // }
+    /**
+     * Handler for retrieving a message given an ID
+     */
+    @GetMapping("/messages/{messageId}")
+    public ResponseEntity<Message> getMessageById(@PathVariable Integer messageId){
+        return ResponseEntity.status(HttpStatus.OK).body(messageService.getMessageById(messageId));
+    }
 
     // /**
     //  * Handler for deleting a message given an ID

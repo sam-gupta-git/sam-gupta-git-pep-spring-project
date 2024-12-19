@@ -5,6 +5,7 @@ import com.example.repository.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MessageService {
@@ -26,7 +27,7 @@ public class MessageService {
      * Method to retrieve all messages as a list, call messageRepository to select all messages in table
      */ 
     public List<Message> getAllMessages() {
-        return messageRepository.getAllMessages();
+        return messageRepository.findAll();
     }
 
     // /**
@@ -37,13 +38,19 @@ public class MessageService {
     //     return messageRepository.getMessagesByAccount(posted_by);
     // }
 
-    // /**
-    //  * Method to retrieve a message by its ID
-    //  * @param message_id The ID of a message to be retrieved
-    //  */ 
-    // public Message getMessageById(int message_id) {
-    //     return messageRepository.getMessageById(message_id);
-    // }
+    /**
+     * Method to retrieve a message by its ID
+     * @param message_id The ID of a message to be retrieved
+     */ 
+    public Message getMessageById(Integer messageId) {
+        Optional<Message> messageOptional = messageRepository.findById(messageId);
+        if(messageOptional.isPresent()){
+            Message message = messageOptional.get();
+            return message;
+        }
+        return null;
+        
+    }
 
     // /**
     //  * Method to update the message_text of a message given its ID
