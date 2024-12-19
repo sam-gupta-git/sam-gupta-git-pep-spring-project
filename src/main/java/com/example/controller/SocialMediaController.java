@@ -52,26 +52,23 @@ public class SocialMediaController {
         if (message.getMessageText().length() > 0 && message.getMessageText().length() < 255){
             Message addedMessage = messageService.addMessage(message);
             return ResponseEntity.status(HttpStatus.OK).body(addedMessage);
-        
         } else {    
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        
     }
 
     /**
      * Handler for updating message endpoint
-     * @param context The Javalin Context object manages information about both the HTTP request and response.
      */
     @PatchMapping("/messages/{messageId}")
-    public ResponseEntity<?> updateMessageHandler(@PathVariable Integer messageId, @RequestBody Message message){
+    public ResponseEntity<Integer> updateMessageHandler(@PathVariable Integer messageId, @RequestBody Message message){
         // Verify that the updated message text is valid and the specified message exists
         String messageText = message.getMessageText();
         if (messageText.length() > 0 && messageText.length() < 255 && messageService.getMessageById(messageId) != null){
             int updateResult = messageService.updateMessage(messageId, message);
             return ResponseEntity.status(HttpStatus.OK).body(updateResult);
         } else {    
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 
@@ -91,19 +88,19 @@ public class SocialMediaController {
         return ResponseEntity.status(HttpStatus.OK).body(messageService.getMessageById(messageId));
     }
 
-    // /**
-    //  * Handler for deleting a message given an ID
-    //  * @param context The Javalin Context object manages information about both the HTTP request and response.
-    //  */
-    // private void deleteMessageHandler(Context ctx) throws JsonProcessingException {
-    //     ObjectMapper mapper = new ObjectMapper();
-    //     int message_id = Integer.parseInt(ctx.pathParam("message_id"));
-    //     // Delete and return message if it exists
-    //     if (messageService.getMessageById(message_id) != null){
-    //         Message deletedMessage = messageService.deleteMessage(message_id);
-    //         ctx.json(mapper.writeValueAsString(deletedMessage));
-    //     } 
-    // }
+    /**
+     * Handler for deleting a message given an ID
+     */
+    @DeleteMapping("/messages/{messageId}")
+    public ResponseEntity<Integer> deleteMessageHandler(@PathVariable Integer messageId) {
+        // Delete and return message if it exists
+        if (messageService.getMessageById(messageId) != null){
+            int deleteResult = messageService.deleteMessage(messageId);
+            return ResponseEntity.status(HttpStatus.OK).body(deleteResult);
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }
+    }
 
     // /**
     //  * Handler for new account endpoint

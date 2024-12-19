@@ -9,9 +9,6 @@ import java.util.Optional;
 
 @Service
 public class MessageService {
-    /**
-     * 
-     */
     @Autowired    
     MessageRepository messageRepository;
 
@@ -40,7 +37,7 @@ public class MessageService {
 
     /**
      * Method to retrieve a message by its ID
-     * @param message_id The ID of a message to be retrieved
+     * @param messageId The ID of a message to be retrieved
      */ 
     public Message getMessageById(Integer messageId) {
         Optional<Message> messageOptional = messageRepository.findById(messageId);
@@ -49,14 +46,13 @@ public class MessageService {
             return message;
         }
         return null;
-        
     }
 
-    // /**
-    //  * Method to update the message_text of a message given its ID
-    //  * @param message_id The ID of the message to be updated
-    //  * @param message The message object that contains the updated message
-    //  */ 
+    /**
+     * Method to update the message_text of a message given its ID
+     * @param messageId The ID of the message to be updated
+     * @param message The message object that contains the updated message
+     */ 
     public int updateMessage(int messageId, Message message) {
         Optional<Message> messageOptional = messageRepository.findById(messageId);
         if(messageOptional.isPresent()){
@@ -68,16 +64,17 @@ public class MessageService {
         return 0;
     }
 
-    // /**
-    //  * Method to delete a message given its ID
-    //  * @param message_id The ID of the message to be deleted
-    //  */ 
-    // public Message deleteMessage(int message_id) {
-    //     Message deletedMessage = messageRepository.getMessageById(message_id);
-    //     if (deletedMessage != null){
-    //         messageRepository.deleteMessage(message_id);
-    //         return deletedMessage;
-    //     }
-    //     return null;
-    // }
+    /**
+     * Method to delete a message given its ID
+     * @param messageId The ID of the message to be deleted
+     */ 
+    public int deleteMessage(int messageId) {
+        Optional<Message> messageOptional = messageRepository.findById(messageId);
+        if(messageOptional.isPresent()){
+            Message deletedMessage = messageOptional.get();
+            messageRepository.delete(deletedMessage);
+            return 1;
+        }
+        return 0;
+    }
 }
