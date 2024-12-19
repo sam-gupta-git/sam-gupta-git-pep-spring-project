@@ -49,7 +49,7 @@ public class SocialMediaController {
     public ResponseEntity<Message> postMessageHandler(@RequestBody Message message) {
         // Verify that the new message text is valid and the message refers to an existing account
         //  && accountService.getAccountById(message.getPostedBy()) != null
-        if (message.getMessageText().length() > 0 && message.getMessageText().length() < 255){
+        if (accountService.getAccountById(message.getPostedBy()) != null && message.getMessageText().length() > 0 && message.getMessageText().length() < 255){
             Message addedMessage = messageService.addMessage(message);
             return ResponseEntity.status(HttpStatus.OK).body(addedMessage);
         } else {    
@@ -120,21 +120,19 @@ public class SocialMediaController {
         }
     }
 
-    // /**
-    //  * Handler for verifying a login given username and password, return 401: forbidden if invalid login
-    //  * @param context The Javalin Context object manages information about both the HTTP request and response.
-    //  */
-    // private void postAccountLoginHandler(Context ctx) throws JsonProcessingException {
-    //     ObjectMapper mapper = new ObjectMapper();
-    //     Account account = mapper.readValue(ctx.body(), Account.class);
-    //     Account accountLogin = accountService.verifyLogin(account.getUsername(), account.getPassword());
-    //     // Return account if login is successful
-    //     if (accountLogin != null){
-    //         ctx.json(mapper.writeValueAsString(accountLogin));
-    //     } else {    
-    //         ctx.status(401);
-    //     }
-    // }
+    /**
+     * Handler for verifying a login given username and password, return 401: forbidden if invalid login
+     */
+    @PostMapping("/login")
+    public ResponseEntity<Account> postAccountLoginHandler (@RequestBody Account account){
+        // Check if username and password are valid
+        Account loginAccount = accountService.login(account.getUsername(), account.getPassword());
+        if (loginAccount != null){
+            return ResponseEntity.status(HttpStatus.OK).body(loginAccount);
+        } else {    
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }
 
     // /**
     //  * Handler for retrieving messages given an account ID
