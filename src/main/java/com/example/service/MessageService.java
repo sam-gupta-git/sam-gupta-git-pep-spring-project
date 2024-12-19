@@ -18,13 +18,13 @@ public class MessageService {
      * Method to add a new message, returns the new message object if successful
      * @param message Message object that contains message information
      */ 
-    // public Message addMessage(Message message){
-    //     return messageRepository.insertMessage(message);
-    // }
+    public Message addMessage(Message message){
+        return messageRepository.save(message);
+    }
 
-    // /**
-    //  * Method to retrieve all messages as a list, call messageRepository to select all messages in table
-    //  */ 
+    /**
+     * Method to retrieve all messages as a list, call messageRepository to select all messages in table
+     */ 
     public List<Message> getAllMessages() {
         return messageRepository.getAllMessages();
     }

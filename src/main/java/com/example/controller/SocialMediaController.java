@@ -45,19 +45,19 @@ public class SocialMediaController {
     //     return app;
     // }
 
-    // @PostMapping("/messages")
-    // public ResponseEntity<Message> postMessageHandler(@RequestBody Message message) {
-    //     // Verify that the new message text is valid and the message refers to an existing account
-    //     //  && accountService.getAccountById(message.getPostedBy()) != null
-    //     if (message.getMessageText().length() > 0 && message.getMessageText().length() < 255){
-    //         Message addedMessage = messageService.addMessage(message);
-    //         return ResponseEntity.status(HttpStatus.CREATED).body(addedMessage);
+    @PostMapping("/messages")
+    public ResponseEntity<Message> postMessageHandler(@RequestBody Message message) {
+        // Verify that the new message text is valid and the message refers to an existing account
+        //  && accountService.getAccountById(message.getPostedBy()) != null
+        if (message.getMessageText().length() > 0 && message.getMessageText().length() < 255){
+            Message addedMessage = messageService.addMessage(message);
+            return ResponseEntity.status(HttpStatus.OK).body(addedMessage);
         
-    //     } else {    
-    //         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-    //     }
+        } else {    
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
         
-    // }
+    }
 
     // /**
     //  * Handler for updating message endpoint
