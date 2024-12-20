@@ -13,7 +13,7 @@ public class MessageService {
     MessageRepository messageRepository;
 
     /**
-     * Method to add a new message, returns the new message object if successful
+     * Method to add a new message by calling messageRepository.save() to persist new message, returns the new message object if successful
      * @param message Message object that contains message information
      */ 
     public Message addMessage(Message message){
@@ -21,7 +21,7 @@ public class MessageService {
     }
 
     /**
-     * Method to retrieve all messages as a list, call messageRepository to select all messages in table
+     * Method to retrieve all messages as a list, call messageRepository.findAll() to select all messages in table
      */ 
     public List<Message> getAllMessages() {
         return messageRepository.findAll();
@@ -29,7 +29,7 @@ public class MessageService {
 
     /**
      * Method to retrieve list of messages from a specific account
-     * @param posted_by The account_id to get messages from, should match an account_id in the account table
+     * @param posted_by The accountId to get messages from, should match an accountId in the account table
      */ 
     public List<Message> getMessagesByAccount(int accountId) {
         return messageRepository.findMessageByAccount(accountId);
@@ -49,7 +49,7 @@ public class MessageService {
     }
 
     /**
-     * Method to update the message_text of a message given its ID
+     * Method to update the messageText of a message given its ID
      * @param messageId The ID of the message to be updated
      * @param message The message object that contains the updated message
      */ 
