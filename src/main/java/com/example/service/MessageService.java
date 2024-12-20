@@ -27,13 +27,13 @@ public class MessageService {
         return messageRepository.findAll();
     }
 
-    // /**
-    //  * Method to retrieve list of messages from a specific account
-    //  * @param posted_by The account_id to get messages from, should match an account_id in the account table
-    //  */ 
-    // public List<Message> getMessagesByAccount(int posted_by) {
-    //     return messageRepository.getMessagesByAccount(posted_by);
-    // }
+    /**
+     * Method to retrieve list of messages from a specific account
+     * @param posted_by The account_id to get messages from, should match an account_id in the account table
+     */ 
+    public List<Message> getMessagesByAccount(int accountId) {
+        return messageRepository.findMessageByAccount(accountId);
+    }
 
     /**
      * Method to retrieve a message by its ID

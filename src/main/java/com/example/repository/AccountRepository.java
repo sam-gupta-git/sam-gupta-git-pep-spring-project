@@ -4,6 +4,9 @@ import com.example.entity.Account;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
+/**
+ * JPA Repository interface for the Account entity
+ */
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Integer> {
 

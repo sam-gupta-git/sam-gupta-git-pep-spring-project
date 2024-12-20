@@ -3,14 +3,12 @@ package com.example.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.entity.Account;
 import com.example.entity.Message;
-
 import com.example.service.AccountService;
 import com.example.service.MessageService;
-
-import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,25 +28,15 @@ public class SocialMediaController {
         this.accountService = accountService;
         this.messageService = messageService;
     }
-    // public Javalin startAPI() {
-    //     // New endpoints with handlers
-    //     Javalin app = Javalin.create();
-    //     app.get("example-endpoint", this::exampleHandler);
-    //     app.get("/messages", this::getAllMessagesHandler);
-    //     app.get("/messages/{message_id}", this::getMessageById);
-    //     app.post("/messages", this::postMessageHandler);
-    //     app.patch("/messages/{message_id}", this::updateMessageHandler);
-    //     app.delete("/messages/{message_id}", this::deleteMessageHandler);
-    //     app.post("/register", this::postAccountHandler);
-    //     app.post("/login", this::postAccountLoginHandler);
-    //     app.get("/accounts/{account_id}/messages", this::getMessagesByAccount);
-    //     return app;
-    // }
 
+    /**
+     * Handler for adding a new message, return error 400: bad request if invalid
+     * @param message Message object to be added
+     */
     @PostMapping("/messages")
+    @ResponseBody
     public ResponseEntity<Message> postMessageHandler(@RequestBody Message message) {
         // Verify that the new message text is valid and the message refers to an existing account
-        //  && accountService.getAccountById(message.getPostedBy()) != null
         if (accountService.getAccountById(message.getPostedBy()) != null && message.getMessageText().length() > 0 && message.getMessageText().length() < 255){
             Message addedMessage = messageService.addMessage(message);
             return ResponseEntity.status(HttpStatus.OK).body(addedMessage);
@@ -58,9 +46,12 @@ public class SocialMediaController {
     }
 
     /**
-     * Handler for updating message endpoint
+     * Handler for updating a message, return error 400: bad request if invalid
+     * @param messageId Path variable, ID of message to be updated
+     * @param message Message object containing updated text
      */
     @PatchMapping("/messages/{messageId}")
+    @ResponseBody
     public ResponseEntity<Integer> updateMessageHandler(@PathVariable Integer messageId, @RequestBody Message message){
         // Verify that the updated message text is valid and the specified message exists
         String messageText = message.getMessageText();
@@ -76,22 +67,27 @@ public class SocialMediaController {
      * Handler for retrieving all messages
      */
     @GetMapping("/messages")
+    @ResponseBody
     public ResponseEntity<List<Message>> getAllMessagesHandler(){
         return ResponseEntity.status(HttpStatus.OK).body(messageService.getAllMessages());
     }
 
     /**
      * Handler for retrieving a message given an ID
+     * @param messageId Path variable, ID of message to be retrieved
      */
     @GetMapping("/messages/{messageId}")
+    @ResponseBody
     public ResponseEntity<Message> getMessageById(@PathVariable Integer messageId){
         return ResponseEntity.status(HttpStatus.OK).body(messageService.getMessageById(messageId));
     }
 
     /**
      * Handler for deleting a message given an ID
+     * @param messageId Path variable, ID of message to be deleted
      */
     @DeleteMapping("/messages/{messageId}")
+    @ResponseBody
     public ResponseEntity<Integer> deleteMessageHandler(@PathVariable Integer messageId) {
         // Delete and return message if it exists
         if (messageService.getMessageById(messageId) != null){
@@ -103,9 +99,12 @@ public class SocialMediaController {
     }
 
     /**
-     * Handler for new account endpoint
+     * Handler for registering a new account, return error 409: conflict if username already exists
+     * or error 400 if username is invalid
+     * @param account The account object to be added
      */
     @PostMapping("/register")
+    @ResponseBody
     public ResponseEntity<Account> postAccountHandler (@RequestBody Account account) {
         // Check if user exists
         if (accountService.getAccountByUsername(account.getUsername()) != null){
@@ -121,9 +120,11 @@ public class SocialMediaController {
     }
 
     /**
-     * Handler for verifying a login given username and password, return 401: forbidden if invalid login
+     * Handler for verifying a login given username and password, return error 401: forbidden if invalid login
+     * @param account The account object to be verified and returned if successful
      */
     @PostMapping("/login")
+    @ResponseBody
     public ResponseEntity<Account> postAccountLoginHandler (@RequestBody Account account){
         // Check if username and password are valid
         Account loginAccount = accountService.login(account.getUsername(), account.getPassword());
@@ -134,14 +135,14 @@ public class SocialMediaController {
         }
     }
 
-    // /**
-    //  * Handler for retrieving messages given an account ID
-    //  * @param context The Javalin Context object manages information about both the HTTP request and response.
-    //  */
-    // private void getMessagesByAccount(Context ctx) throws JsonProcessingException {
-    //     ObjectMapper mapper = new ObjectMapper();
-    //     int posted_by = Integer.parseInt(ctx.pathParam("account_id"));
-    //     List<Message> fetchedMessages = messageService.getMessagesByAccount(posted_by);
-    //     ctx.json(mapper.writeValueAsString(fetchedMessages));
-    // }
+    /**
+     * Handler for retrieving messages given an account ID
+     * @param accountId Path variable, ID of account to retrieve messages from
+     */
+    @GetMapping("/accounts/{accountId}/messages")
+    @ResponseBody
+    public ResponseEntity<List<Message>> getMessagesByAccount (@PathVariable Integer accountId) {
+        List<Message> fetchedMessages = messageService.getMessagesByAccount(accountId);
+        return ResponseEntity.status(HttpStatus.OK).body(fetchedMessages);
+    }
 }
